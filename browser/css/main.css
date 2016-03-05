@@ -1,0 +1,95 @@
+$green: #2ecc71;
+$blue: #3498db;
+
+body {
+  font-family: 'Droid Sans', sans-serif;
+}
+
+.container {
+  width: 700px;
+  margin: 0 auto;
+}
+
+.row {
+  lost-utility: clearfix;
+}
+
+.full {
+  lost-column: 1 0;
+}
+
+.half {
+  lost-column: 1/2 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.logo {
+  font-size: 50pt;
+  color: $blue;
+}
+
+.timer-text {
+  font-size: 280pt;
+  color: $blue;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+  margin-top: 60px;
+}
+
+.exercise-text {
+  font-size: 80pt;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.stage-form {
+  input {
+    padding: 10px;
+    border: 1px solid #e3e3e3;
+    font-size: 16pt;
+  }
+
+  button {
+    font-weight: bold;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-size: 16pt;
+  }
+}
+
+.btn {
+  padding: 10px;
+  border: 0;
+}
+
+.btn-add {
+  color: #fff;
+  background-color: $green;
+}
+
+.spin-save {
+  margin-top: 30px;
+  font-weight: bold;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 16pt;
+}
+
+.stage-list {
+  margin-top: 30px;
+
+  .stage-item {
+    background-color: #fff;
+    padding: 5px;
+    font-size: 16pt;
+    margin-bottom: 10px;
+    border: 1px solid #e3e3e3;
+  }
+}
+
+.up-next {
+  font-size: 180%;
+}

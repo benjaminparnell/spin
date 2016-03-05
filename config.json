@@ -1,0 +1,4 @@
+{
+  "dbUrl": "mongodb://127.0.0.1:27017/spin-development",
+  "url": "http://localhost:3000"
+}
