@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 
 let spinSchema = new mongoose.Schema({
-  stages: { type: Object },
+  stages: { type: Object, required: true },
   createdDate: { type: Date, default: Date.now }
 })
 

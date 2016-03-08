@@ -50,5 +50,8 @@ Session.vim
 # auto-generated tag files
 tags
 
+# ignore nyc output
+.nyc_output
+
 public/js/bundle.js
 public/js/bundle.js.map
