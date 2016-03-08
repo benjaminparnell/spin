@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "webpack --config webpack-prod.config.js --progress --colors",
+    "start": "node server.js",
     "test": "eslint -f unix ."
   },
   "repository": {

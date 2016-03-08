@@ -8,7 +8,7 @@ const Spin = require('./models/spin')
 const configury = require('configury')
 const config = configury('./config.json')(process.env.NODE_ENV || 'development')
 
-mongoose.connect(config.dbUrl)
+mongoose.connect(process.env.MONGOLAB_URI || config.dbUrl)
 
 let app = express()
 let port = process.env.PORT || 3000
