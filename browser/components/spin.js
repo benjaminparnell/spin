@@ -12,8 +12,15 @@ class Spin extends Component {
       stages: [],
       finished: false,
       paused: true,
-      donutColor: 'primary'
+      donutColor: 'primary',
+      donutSeconds: 0
     }
+  }
+
+  tickDonut () {
+    this.setState({
+      donutSeconds: this.state.donutSeconds - 15
+    })
   }
 
   tick () {
@@ -26,10 +33,13 @@ class Spin extends Component {
           stage: this.state.stage + 1,
           currentSeconds: stage.seconds,
           seconds: stage.seconds,
-          text: stage.text
+          text: stage.text,
+          donutSeconds: 1000 * stage.seconds
         })
         clearInterval(this.interval)
+        clearInterval(this.donutInterval)
         this.interval = setInterval(this.tick.bind(this), 1000)
+        this.donutInterval = setInterval(this.tickDonut.bind(this), 15)
       } else {
         this.setState({
           finished: true,
@@ -37,6 +47,7 @@ class Spin extends Component {
           donutColor: 'success'
         })
         clearInterval(this.interval)
+        clearInterval(this.donutInterval)
       }
     }
   }
@@ -45,12 +56,14 @@ class Spin extends Component {
     if (event.keyCode === 32 && this.state.paused && !this.state.finished) {
       event.preventDefault()
       this.interval = setInterval(this.tick.bind(this), 1000)
+      this.donutInterval = setInterval(this.tickDonut.bind(this), 15)
       this.setState({
         paused: false
       })
     } else if (event.keyCode === 32 && !this.state.finished) {
       event.preventDefault()
       clearInterval(this.interval)
+      clearInterval(this.donutInterval)
       this.setState({
         paused: true
       })
@@ -63,16 +76,15 @@ class Spin extends Component {
       .end((err, res) => {
         if (err) return
 
-        this.setState({
-          stages: res.body.stages
-        })
+        let stage = res.body.stages[0]
 
-        let stage = this.state.stages[0]
         this.setState({
+          stages: res.body.stages,
           seconds: stage.seconds,
           currentSeconds: stage.seconds,
           text: stage.text,
-          stage: 0
+          stage: 0,
+          donutSeconds: 1000 * stage.seconds
         })
 
         document.addEventListener('keydown', this._handleSpacebar.bind(this))
@@ -87,7 +99,7 @@ class Spin extends Component {
             color={this.state.donutColor}
             size={512}
             strokeWidth={32}
-            value={this.state.seconds / this.state.currentSeconds}>
+            value={this.state.donutSeconds / (1000 * this.state.currentSeconds)}>
             {(() => {
               if (this.state.paused) {
                 return <Icon name='pause' />
