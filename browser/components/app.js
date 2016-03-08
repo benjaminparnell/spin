@@ -1,6 +1,7 @@
 import React from 'react'
 import { findDOMNode } from 'react-dom'
 import { browserHistory } from 'react-router'
+import { Button, Panel, Input, Space, Divider } from 'rebass'
 import request from 'superagent'
 
 class App extends React.Component {
@@ -17,6 +18,7 @@ class App extends React.Component {
     this._handleSave = this._handleSave.bind(this)
     this._onTimeChange = this._onTimeChange.bind(this)
     this._onTextChange = this._onTextChange.bind(this)
+    this._handleDuplicate = this._handleDuplicate.bind(this)
   }
 
   _handleSave (e) {
@@ -52,7 +54,11 @@ class App extends React.Component {
       seconds: '',
       text: ''
     })
-    findDOMNode(this.refs.textInput).focus()
+    document.querySelector('input[name="text"]').focus()
+  }
+
+  _handleDuplicate (e) {
+    e.preventDefault()
   }
 
   _onTimeChange (e) {
@@ -63,6 +69,10 @@ class App extends React.Component {
     this.setState({ text: e.target.value })
   }
 
+  componentDidMount () {
+    document.querySelector('input[name="text"]').focus()
+  }
+
   render () {
     return (
       <div className='container'>
@@ -70,27 +80,36 @@ class App extends React.Component {
           <h1 className='logo text-center'>Spin</h1>
         </div>
 
-        <form className='row stage-form'>
-          <input ref='textInput' type='text' className='full' placeholder='Text' onChange={this._onTextChange} value={this.state.text}/>
-          <input ref='timeInput' type='text' className='full' placeholder='Time (seconds or minutes:seconds)' onChange={this._onTimeChange} value={this.state.seconds}/>
-          <button onClick={this._handleAdd} className='full btn btn-add'>Add stage</button>
-        </form>
+        <Panel theme="info">
+          <form>
+            <Input name='text' label='Text' hideLabel={true} type='text' placeholder='Text' onChange={this._onTextChange} value={this.state.text}/>
+            <Input name='time' label='Time' hideLabel={true} type='text' placeholder='Time (seconds or minutes:seconds)' onChange={this._onTimeChange} value={this.state.seconds}/>
 
-        <div className='stage-list'>
-          {this.state.stages.map((stage) => {
-            return <div key={stage.index} className='stage-item text-center'>
-              <p>{stage.seconds} seconds @ {stage.text}</p>
+            <div>
+              <Button onClick={this._handleAdd} theme="success">Add stage</Button>
+              <Space auto={true} />
+              {(() => {
+                if (this.state.stages.length) {
+                    return <Button onClick={this._handleDuplicate} theme="warning">Duplicate</Button>
+                }
+              })()}
+              <Space auto={true} />
+              {(() => {
+                if (this.state.stages.length) {
+                    return <Button onClick={this._handleSave} theme="success">Save</Button>
+                }
+              })()}
             </div>
-          })}
-        </div>
+          </form>
+        </Panel>
 
-        <div className='row'>
-          {(() => {
-            if (this.state.stages.length) {
-              return <button onClick={this._handleSave} className='full btn btn-add spin-save'>Save</button>
-            }
-          })()}
-        </div>
+        <Divider />
+
+        {this.state.stages.map((stage) => {
+          return <Panel theme="info" key={stage.index}>
+            <p>{stage.seconds} seconds @ {stage.text}</p>
+          </Panel>
+        })}
       </div>
     )
   }
