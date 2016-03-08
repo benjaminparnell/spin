@@ -1,5 +1,4 @@
 import React from 'react'
-import { findDOMNode } from 'react-dom'
 import { browserHistory } from 'react-router'
 import { Button, Panel, Input, Space, Divider } from 'rebass'
 import request from 'superagent'
@@ -80,23 +79,23 @@ class App extends React.Component {
           <h1 className='logo text-center'>Spin</h1>
         </div>
 
-        <Panel theme="info">
+        <Panel theme='info'>
           <form>
-            <Input name='text' label='Text' hideLabel={true} type='text' placeholder='Text' onChange={this._onTextChange} value={this.state.text}/>
-            <Input name='time' label='Time' hideLabel={true} type='text' placeholder='Time (seconds or minutes:seconds)' onChange={this._onTimeChange} value={this.state.seconds}/>
+            <Input name='text' label='Text' hideLabel type='text' placeholder='Text' onChange={this._onTextChange} value={this.state.text}/>
+            <Input name='time' label='Time' hideLabel type='text' placeholder='Time (seconds or minutes:seconds)' onChange={this._onTimeChange} value={this.state.seconds}/>
 
             <div>
-              <Button onClick={this._handleAdd} theme="success">Add stage</Button>
-              <Space auto={true} />
+              <Button onClick={this._handleAdd} theme='success'>Add stage</Button>
+              <Space auto />
               {(() => {
                 if (this.state.stages.length) {
-                    return <Button onClick={this._handleDuplicate} theme="warning">Duplicate</Button>
+                  return <Button onClick={this._handleDuplicate} theme='warning'>Duplicate</Button>
                 }
               })()}
-              <Space auto={true} />
+              <Space auto />
               {(() => {
                 if (this.state.stages.length) {
-                    return <Button onClick={this._handleSave} theme="success">Save</Button>
+                  return <Button onClick={this._handleSave} theme='success'>Save</Button>
                 }
               })()}
             </div>
@@ -106,7 +105,7 @@ class App extends React.Component {
         <Divider />
 
         {this.state.stages.map((stage) => {
-          return <Panel theme="info" key={stage.index}>
+          return <Panel theme='info' key={stage.index}>
             <p>{stage.seconds} seconds @ {stage.text}</p>
           </Panel>
         })}

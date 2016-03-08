@@ -42,13 +42,13 @@ class Spin extends Component {
   }
 
   _handleSpacebar (event) {
-    if (event.keyCode === 32 && this.state.paused) {
+    if (event.keyCode === 32 && this.state.paused && !this.state.finished) {
       event.preventDefault()
       this.interval = setInterval(this.tick.bind(this), 1000)
       this.setState({
         paused: false
       })
-    } else if (event.keyCode === 32) {
+    } else if (event.keyCode === 32 && !this.state.finished) {
       event.preventDefault()
       clearInterval(this.interval)
       this.setState({
@@ -82,7 +82,7 @@ class Spin extends Component {
   render () {
     return (
       <Container>
-        <div className="text-center">
+        <div className='text-center'>
           <Donut
             color={this.state.donutColor}
             size={512}
