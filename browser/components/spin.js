@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import { Donut, Divider, Container } from 'rebass'
 import request from 'superagent'
+import Icon from 'react-geomicons'
 
 class Spin extends Component {
 
@@ -10,7 +11,8 @@ class Spin extends Component {
     this.state = {
       stages: [],
       finished: false,
-      paused: true
+      paused: true,
+      donutColor: 'primary'
     }
   }
 
@@ -31,7 +33,8 @@ class Spin extends Component {
       } else {
         this.setState({
           finished: true,
-          text: 'Done'
+          text: 'Done',
+          donutColor: 'success'
         })
         clearInterval(this.interval)
       }
@@ -81,11 +84,19 @@ class Spin extends Component {
       <Container>
         <div className="text-center">
           <Donut
-            color='primary'
+            color={this.state.donutColor}
             size={512}
             strokeWidth={32}
             value={this.state.seconds / this.state.currentSeconds}>
-            {this.state.seconds}
+            {(() => {
+              if (this.state.paused) {
+                return <Icon name='pause' />
+              } else if (this.state.finished) {
+                return <Icon name='check' />
+              } else {
+                return this.state.seconds
+              }
+            })()}
           </Donut>
 
           <h2 className='exercise-text'>{this.state.text}</h2>
