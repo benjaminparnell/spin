@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react'
+import { Donut, Divider, Container } from 'rebass'
 import request from 'superagent'
 
 class Spin extends Component {
@@ -8,7 +9,8 @@ class Spin extends Component {
 
     this.state = {
       stages: [],
-      finished: false
+      finished: false,
+      paused: true
     }
   }
 
@@ -20,6 +22,7 @@ class Spin extends Component {
       if (stage) {
         this.setState({
           stage: this.state.stage + 1,
+          currentSeconds: stage.seconds,
           seconds: stage.seconds,
           text: stage.text
         })
@@ -32,6 +35,22 @@ class Spin extends Component {
         })
         clearInterval(this.interval)
       }
+    }
+  }
+
+  _handleSpacebar (event) {
+    if (event.keyCode === 32 && this.state.paused) {
+      event.preventDefault()
+      this.interval = setInterval(this.tick.bind(this), 1000)
+      this.setState({
+        paused: false
+      })
+    } else if (event.keyCode === 32) {
+      event.preventDefault()
+      clearInterval(this.interval)
+      this.setState({
+        paused: true
+      })
     }
   }
 
@@ -48,25 +67,37 @@ class Spin extends Component {
         let stage = this.state.stages[0]
         this.setState({
           seconds: stage.seconds,
+          currentSeconds: stage.seconds,
           text: stage.text,
           stage: 0
         })
-        this.interval = setInterval(this.tick.bind(this), 1000)
+
+        document.addEventListener('keydown', this._handleSpacebar.bind(this))
       })
   }
 
   render () {
     return (
-      <div className='container text-center'>
-        <h1 className='timer-text'>
-          {this.state.seconds}
-        </h1>
-        <h2 className='exercise-text'>{this.state.text}</h2>
-        <div className='row up-next'>
-          <h1>Up next</h1>
-          <h2>{(this.state.stages[this.state.stage + 1] ? this.state.stages[this.state.stage + 1].text : 'Done!')}</h2>
+      <Container>
+        <div className="text-center">
+          <Donut
+            color='primary'
+            size={512}
+            strokeWidth={32}
+            value={this.state.seconds / this.state.currentSeconds}>
+            {this.state.seconds}
+          </Donut>
+
+          <h2 className='exercise-text'>{this.state.text}</h2>
+
+          <Divider />
+          <div className='row up-next'>
+            <h1>Up next</h1>
+            <h2>{(this.state.stages[this.state.stage + 1] ? this.state.stages[this.state.stage + 1].text : 'Done!')}</h2>
+          </div>
+          <Divider />
         </div>
-      </div>
+      </Container>
     )
   }
 }
