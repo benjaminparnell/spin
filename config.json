@@ -1,4 +1,11 @@
 {
-  "dbUrl": "mongodb://127.0.0.1:27017/spin-development",
-  "url": "http://localhost:3000"
+  "global": {
+    "dbUrl": "mongodb://127.0.0.1:27017/spin-development",
+    "url": "http://localhost:3000"
+  },
+
+  "production": {
+    "dbUrl": "mongodb://mongo/spin-production",
+    "url": "http://spin.benp.space"
+  }
 }

@@ -5,7 +5,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const Spin = require('./models/spin')
-const config = require('./config.json')
+const configury = require('configury')
+const config = configury('./config.json')(process.env.NODE_ENV || 'development')
 
 mongoose.connect(config.dbUrl)
 
