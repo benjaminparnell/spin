@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "webpack --config webpack-prod.config.js --progress --colors",
     "start": "node server.js",
-    "test": "eslint -f unix ."
+    "lint": "eslint -f unix .",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
