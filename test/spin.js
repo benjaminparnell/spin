@@ -1,5 +1,5 @@
 import test from 'ava'
-import Spin from '../../models/spin'
+import Spin from '../models/spin'
 
 test('spin model should always have a created date', (t) => {
   t.plan(1)

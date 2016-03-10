@@ -8,14 +8,8 @@
     "start": "node server.js",
     "lint": "eslint -f unix .",
     "pretest": "npm run lint",
-    "test": "nyc --check-coverage --lines 100 ava --tap ./test/**/**/*.test.js",
+    "test": "nyc --check-coverage --lines 100 ava --tap",
     "posttest": "rm -rf .nyc_output"
-  },
-  "ava": {
-    "require": [
-      "babel-register"
-    ],
-    "babel": "inherit"
   },
   "repository": {
     "type": "git",
@@ -32,13 +26,10 @@
     "configury": "^0.3.0",
     "mongoose": "^4.4.6",
     "react": "^0.14.7",
-    "react-addons-create-fragment": "^0.14.7",
-    "react-countdown-clock": "^1.0.5",
     "react-dom": "^0.14.7",
     "react-geomicons": "^2.0.4",
     "react-router": "^2.0.0",
     "rebass": "^0.2.0",
-    "reflexbox": "^1.0.0",
     "superagent": "^1.8.0-beta.2"
   },
   "devDependencies": {
