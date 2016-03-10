@@ -1,6 +1,8 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
 import { Button, Panel, Input, Space, Divider } from 'rebass'
+import Stage from '../components/stage'
+import Group from '../components/group'
 import request from 'superagent'
 
 class App extends React.Component {
@@ -10,7 +12,9 @@ class App extends React.Component {
     this.state = {
       stages: [],
       seconds: null,
-      time: null
+      time: null,
+      duplicates: [],
+      totalStages: 0
     }
 
     this._handleAdd = this._handleAdd.bind(this)
@@ -18,6 +22,35 @@ class App extends React.Component {
     this._onTimeChange = this._onTimeChange.bind(this)
     this._onTextChange = this._onTextChange.bind(this)
     this._handleDuplicate = this._handleDuplicate.bind(this)
+    this._changeStageState = this._changeStageState.bind(this)
+    this._groupRepeatUpdated = this._groupRepeatUpdated.bind(this)
+  }
+
+  _groupRepeatUpdated (group) {
+    let stages = this.state.stages.map((s) => {
+      if (s.id === group.props.stage.id) {
+        s.repeat = s.repeat + 1
+      }
+      return s
+    })
+
+    this.setState({
+      stages: stages
+    })
+  }
+
+  _changeStageState (stage) {
+    if (stage.state.state === 'info') {
+      stage.setState({ state: 'warning' })
+
+      this.setState({ duplicates: this.state.duplicates.concat([stage]) })
+    } else {
+      stage.setState({ state: 'info' })
+
+      this.setState({
+        duplicates: this.state.duplicates.filter((d) => d.props.id !== stage.props.id)
+      })
+    }
   }
 
   _handleSave (e) {
@@ -42,14 +75,19 @@ class App extends React.Component {
       let minutes = parseInt(seconds.split(':')[0])
       seconds = parseInt(seconds.split(':')[1])
       seconds = (minutes * 60) + seconds
+    } else {
+      seconds = parseInt(seconds)
     }
 
     this.setState({
       stages: this.state.stages.concat([{
         text: this.state.text,
         seconds: seconds,
-        index: this.state.stages.length + 1
+        id: this.state.totalStages + 1,
+        state: 'info',
+        type: 'single'
       }]),
+      totalStages: this.state.totalStages + 1,
       seconds: '',
       text: ''
     })
@@ -58,6 +96,42 @@ class App extends React.Component {
 
   _handleDuplicate (e) {
     e.preventDefault()
+
+    let stages = this.state.stages
+    let groupStages = this.state.duplicates.map((d) => {
+      let stage = { text: d.props.text, seconds: d.props.seconds }
+      stages = stages.filter((s) => s.id !== d.props.id)
+      return stage
+    })
+
+    stages = stages.concat([{
+      stages: groupStages,
+      type: 'group',
+      repeat: 2
+    }])
+
+    let index = 0
+    stages = stages.map((s) => {
+      if (s.type === 'group') {
+        s.id = index
+        index++
+        s.stages = s.stages.map((s) => {
+          s.id = index
+          index++
+          return s
+        })
+      } else {
+        s.id = index
+        index++
+      }
+      return s
+    })
+
+    this.setState({
+      stages: stages,
+      duplicates: [],
+      totalStages: index
+    })
   }
 
   _onTimeChange (e) {
@@ -88,8 +162,8 @@ class App extends React.Component {
               <Button onClick={this._handleAdd} theme='success'>Add stage</Button>
               <Space auto />
               {(() => {
-                if (this.state.stages.length) {
-                  return <Button onClick={this._handleDuplicate} theme='warning'>Duplicate</Button>
+                if (this.state.duplicates.length > 1) {
+                  return <Button onClick={this._handleDuplicate} theme='warning'>Group ({this.state.duplicates.length})</Button>
                 }
               })()}
               <Space auto />
@@ -105,9 +179,20 @@ class App extends React.Component {
         <Divider />
 
         {this.state.stages.map((stage) => {
-          return <Panel theme='info' key={stage.index}>
-            <p>{stage.seconds} seconds @ {stage.text}</p>
-          </Panel>
+          if (stage.type === 'single') {
+            return <Stage
+              key={stage.id}
+              id={stage.id}
+              seconds={stage.seconds}
+              text={stage.text}
+              state={stage.state}
+              onClick={this._changeStageState} />
+          } else if (stage.type === 'group') {
+            return <Group
+              stage={stage}
+              onUpdateRepeat={this._groupRepeatUpdated}
+              repeat={stage.repeat} />
+          }
         })}
       </div>
     )

@@ -70,16 +70,30 @@ class Spin extends Component {
     }
   }
 
+  _flattenStages (stages) {
+    return stages.reduce((prev, stage) => {
+      if (stage.type === 'single') {
+        prev = prev.concat([stage])
+      } else if (stage.type === 'group') {
+        for (let index = 0; index < stage.repeat; index++) {
+          prev = prev.concat(stage.stages)
+        }
+      }
+      return prev
+    }, [])
+  }
+
   componentDidMount () {
     request.get(`/api/spin/${this.props.params.id}`)
       .set('Accept', 'application/json')
       .end((err, res) => {
         if (err) return
 
-        let stage = res.body.stages[0]
+        let stages = this._flattenStages(res.body.stages)
+        let stage = stages[0]
 
         this.setState({
-          stages: res.body.stages,
+          stages: stages,
           seconds: stage.seconds,
           currentSeconds: stage.seconds,
           text: stage.text,
@@ -116,7 +130,14 @@ class Spin extends Component {
           <Divider />
           <div className='row up-next'>
             <h1>Up next</h1>
-            <h2>{(this.state.stages[this.state.stage + 1] ? this.state.stages[this.state.stage + 1].text : 'Done!')}</h2>
+            {(() => {
+              let nextStage = this.state.stages[this.state.stage + 1]
+              if (nextStage) {
+                return <h2>{nextStage.seconds} seconds @ {nextStage.text}</h2>
+              } else {
+                return <h2>Done!</h2>
+              }
+            })()}
           </div>
           <Divider />
         </div>

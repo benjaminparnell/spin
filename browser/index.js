@@ -1,8 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, browserHistory } from 'react-router'
-import Spin from './components/spin'
-import App from './components/app'
+import Spin from './pages/spin'
+import App from './pages/app'
 
 require('./css/main.css')
 
