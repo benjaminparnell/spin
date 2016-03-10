@@ -1,6 +1,6 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
-import { Button, Panel, Input, Space, Divider } from 'rebass'
+import { Button, Panel, Input, Space, Divider, Message, Close } from 'rebass'
 import Stage from '../components/stage'
 import Group from '../components/group'
 import request from 'superagent'
@@ -14,7 +14,8 @@ class App extends React.Component {
       seconds: null,
       time: null,
       duplicates: [],
-      totalStages: 0
+      totalStages: 0,
+      groupMessageShowing: true
     }
 
     this._handleAdd = this._handleAdd.bind(this)
@@ -24,6 +25,7 @@ class App extends React.Component {
     this._handleDuplicate = this._handleDuplicate.bind(this)
     this._changeStageState = this._changeStageState.bind(this)
     this._groupRepeatUpdated = this._groupRepeatUpdated.bind(this)
+    this._closeGroupMessage = this._closeGroupMessage.bind(this)
   }
 
   _groupRepeatUpdated (group) {
@@ -146,6 +148,12 @@ class App extends React.Component {
     document.querySelector('input[name="text"]').focus()
   }
 
+  _closeGroupMessage () {
+    this.setState({
+      groupMessageShowing: false
+    })
+  }
+
   render () {
     return (
       <div className='container'>
@@ -177,6 +185,16 @@ class App extends React.Component {
         </Panel>
 
         <Divider />
+
+        {(() => {
+          if (this.state.stages.length > 1 && this.state.groupMessageShowing) {
+            return <Message inverted rounded theme='warning'>
+              You can select multiple stages to group them.
+              <Space auto x={1} />
+              <Close onClick={this._closeGroupMessage} />
+            </Message>
+          }
+        })()}
 
         {this.state.stages.map((stage) => {
           if (stage.type === 'single') {
