@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Panel, Stat } from 'rebass'
+import { Panel, PanelHeader, Stat } from 'rebass'
 import Stage from './stage'
 
 class Group extends Component {
@@ -16,6 +16,9 @@ class Group extends Component {
   render () {
     return (
       <Panel key={this.props.stage.id} theme='warning'>
+        <PanelHeader inverted theme='warning'>
+          Group
+        </PanelHeader>
         {this.props.stage.stages.map((s) => {
           return <Stage
             key={s.id}

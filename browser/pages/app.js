@@ -188,11 +188,14 @@ class App extends React.Component {
 
         {(() => {
           if (this.state.stages.length > 1 && this.state.groupMessageShowing) {
-            return <Message inverted rounded theme='warning'>
-              You can select multiple stages to group them.
-              <Space auto x={1} />
-              <Close onClick={this._closeGroupMessage} />
-            </Message>
+            return <div>
+              <Message inverted rounded theme='warning'>
+                You can select multiple stages to group them.
+                <Space auto x={1} />
+                <Close onClick={this._closeGroupMessage} />
+              </Message>
+              <Divider />
+            </div>
           }
         })()}
 
