@@ -21,10 +21,7 @@ class Group extends Component {
         </PanelHeader>
         {this.props.stage.stages.map((s) => {
           return <Stage
-            key={s.id}
-            id={s.id}
-            seconds={s.seconds}
-            text={s.text}
+            {...s}
             state='info' />
         })}
         <div onClick={this._handleUpdateRepeat}>

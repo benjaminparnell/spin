@@ -202,11 +202,7 @@ class App extends React.Component {
         {this.state.stages.map((stage) => {
           if (stage.type === 'single') {
             return <Stage
-              key={stage.id}
-              id={stage.id}
-              seconds={stage.seconds}
-              text={stage.text}
-              state={stage.state}
+              {...stage}
               onClick={this._changeStageState} />
           } else if (stage.type === 'group') {
             return <Group
